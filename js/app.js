@@ -1,7 +1,7 @@
 // Enemies our player must avoid
 
-const limitesX = [0, 505];
-const limitesY = [0 ,606];
+const limitesX = [-50, 450];
+const limitesY = [0 ,450];
 
 var Enemy = function(x,y,vl) {
     // Variables applied to each of our instances go here,
@@ -19,6 +19,9 @@ var Enemy = function(x,y,vl) {
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
     this.x = this.x + (this.vl)*dt;
+    if (this.x>=limitesX[1]){
+        this.reset();
+    }
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
@@ -29,15 +32,24 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+Enemy.prototype.reset = function() {
+
+    this.x = -10;
+};
+
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 
 var Player = function (){
+    this.initX = 200;
+    this.initY = 380;
+    this.passoX = 100;
+    this.passoY = 80;
 
     this.sprite = 'images/char-boy.png';
-    this.x = 200;
-    this.y = 400;
+    this.x = this.initX ;
+    this.y = this.initY;
     
 };
 
@@ -48,13 +60,11 @@ Player.prototype.render = function() {
 
 Player.prototype.update = function () {
 
-    
+    if (this.y <=-50){
 
-//    if (!isBetween(this.x, limitesX[0], limitesX[1])){
-//     this.x = 200;
-//    } else if (!isBetween(this.y, limitesY[0], limitesY[1])){
-//     this.y = 400;
-//    }
+        this.reset();
+    }
+
 };
 
 
@@ -63,27 +73,40 @@ Player.prototype.handleInput = function (codigo_key) {
     switch (codigo_key) {
 
             case "left":
-                this.x = this.x - 50;
+                if ((this.x - this.passoX)>limitesX[0]){
+                    this.x = this.x - this.passoX;
+                }
                 break;
             case "right":
-                this.x = this.x + 50;
+                if ((this.x + this.passoX)<limitesX[1]){
+                    this.x = this.x + this.passoX;
+                }
                 break;
             case "up":
-                this.y = this.y - 50;
+                this.y = this.y - this.passoY;
                 break;
             case "down":
-                this.y = this.y + 50;
+                if ((this.y + this.passoY)<limitesY[1]){
+                    this.y = this.y + this.passoY;
+                }
                 break;
     };
 
-}
+};
+
+Player.prototype.reset = function() {
+
+    this.x = 200;
+    this.y = 375;
+};
+
 
 
 // Now instantiate your objects.
 
-var enemy1 = new Enemy(50,10, 30);
-var enemy2 = new Enemy(0,100, 100);
-var enemy3 = new Enemy(200,200, 150);
+var enemy1 = new Enemy(-10,215, 30);
+var enemy2 = new Enemy(-10,135, 100);
+var enemy3 = new Enemy(-10,55, 150);
 
 // Place all enemy objects in an array called allEnemies
 
@@ -97,16 +120,17 @@ var player = new Player();
 
 
 
-// checkCollisions = function(){
+var checkCollisions = function(){
 
-//     for (i=0;i<allEnemies.length;i++){
+    for (i=0;i<allEnemies.length;i++){
 
-//         if ((player.x === allEnemies[i].x)&&(player.y === allEnemies[i].y)){
-//             player.x = 200;
-//             player.y = 400;
-//           }
-//     };
-// };
+        console.log(enemy2.x, enemy2.y, player.x,player.y);
+
+        if (((player.x > allEnemies[i].x-45) && (player.x < allEnemies[i].x+45))&&((allEnemies[i].y === player.y))){
+            player.reset();
+          }
+    };
+};
 
 
 
