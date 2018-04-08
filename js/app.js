@@ -1,9 +1,8 @@
 // Enemies our player must avoid
-
 const limitesX = [-50, 450];
-const limitesY = [0 ,450];
+const limitesY = [0, 450];
 
-var Enemy = function(x,y,vl) {
+var Enemy = function (x, y, vl) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
 
@@ -11,15 +10,15 @@ var Enemy = function(x,y,vl) {
     // a helper we've provided to easily load images
     this.sprite = 'images/enemy-bug.png';
     this.x = x;
-    this.y=y;
+    this.y = y;
     this.vl = vl;
 };
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
-Enemy.prototype.update = function(dt) {
-    this.x = this.x + (this.vl)*dt;
-    if (this.x>=limitesX[1]){
+Enemy.prototype.update = function (dt) {
+    this.x = this.x + (this.vl) * dt;
+    if (this.x >= limitesX[1]) {
         this.reset();
     }
     // You should multiply any movement by the dt parameter
@@ -28,11 +27,11 @@ Enemy.prototype.update = function(dt) {
 };
 
 // Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
+Enemy.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-Enemy.prototype.reset = function() {
+Enemy.prototype.reset = function () {
 
     this.x = -10;
 };
@@ -41,26 +40,26 @@ Enemy.prototype.reset = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 
-var Player = function (){
+var Player = function () {
     this.initX = 200;
     this.initY = 380;
     this.passoX = 100;
     this.passoY = 80;
 
     this.sprite = 'images/char-boy.png';
-    this.x = this.initX ;
+    this.x = this.initX;
     this.y = this.initY;
-    
+
 };
 
-Player.prototype.render = function() {
+Player.prototype.render = function () {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 
 Player.prototype.update = function () {
 
-    if (this.y <=-50){
+    if (this.y <= -50) {
 
         this.reset();
     }
@@ -72,29 +71,29 @@ Player.prototype.handleInput = function (codigo_key) {
 
     switch (codigo_key) {
 
-            case "left":
-                if ((this.x - this.passoX)>limitesX[0]){
-                    this.x = this.x - this.passoX;
-                }
-                break;
-            case "right":
-                if ((this.x + this.passoX)<limitesX[1]){
-                    this.x = this.x + this.passoX;
-                }
-                break;
-            case "up":
-                this.y = this.y - this.passoY;
-                break;
-            case "down":
-                if ((this.y + this.passoY)<limitesY[1]){
-                    this.y = this.y + this.passoY;
-                }
-                break;
-    };
+    case "left":
+        if ((this.x - this.passoX) > limitesX[0]) {
+            this.x = this.x - this.passoX;
+        }
+        break;
+    case "right":
+        if ((this.x + this.passoX) < limitesX[1]) {
+            this.x = this.x + this.passoX;
+        }
+        break;
+    case "up":
+        this.y = this.y - this.passoY;
+        break;
+    case "down":
+        if ((this.y + this.passoY) < limitesY[1]) {
+            this.y = this.y + this.passoY;
+        }
+        break;
+    }
 
 };
 
-Player.prototype.reset = function() {
+Player.prototype.reset = function () {
 
     this.x = 200;
     this.y = 375;
@@ -104,9 +103,9 @@ Player.prototype.reset = function() {
 
 // Now instantiate your objects.
 
-var enemy1 = new Enemy(-10,215, 30);
-var enemy2 = new Enemy(-10,135, 100);
-var enemy3 = new Enemy(-10,55, 150);
+var enemy1 = new Enemy(-10, 215, 30);
+var enemy2 = new Enemy(-10, 135, 100);
+var enemy3 = new Enemy(-10, 55, 150);
 
 // Place all enemy objects in an array called allEnemies
 
@@ -119,17 +118,15 @@ var player = new Player();
 
 
 
+var checkCollisions = function () {
 
-var checkCollisions = function(){
+    for (i = 0; i < allEnemies.length; i++) {
 
-    for (i=0;i<allEnemies.length;i++){
 
-        console.log(enemy2.x, enemy2.y, player.x,player.y);
-
-        if (((player.x > allEnemies[i].x-45) && (player.x < allEnemies[i].x+45))&&((allEnemies[i].y === player.y))){
+        if (((player.x > allEnemies[i].x - 45) && (player.x < allEnemies[i].x + 45)) && ((allEnemies[i].y === player.y))) {
             player.reset();
-          }
-    };
+        }
+    }
 };
 
 
@@ -137,14 +134,13 @@ var checkCollisions = function(){
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
-document.addEventListener('keyup', function(e) {
+document.addEventListener('keyup', function (e) {
     var allowedKeys = {
-        37: 'left',
-        38: 'up',
-        39: 'right',
-        40: 'down'
+        37: 'left'
+        , 38: 'up'
+        , 39: 'right'
+        , 40: 'down'
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
-
